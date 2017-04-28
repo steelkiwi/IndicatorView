@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="IndicatorView">
+        <attr name="iv_bar_color" format="color"/>
+        <attr name="iv_select_color" format="color"/>
+        <attr name="iv_idle_color" format="color"/>
+        <attr name="iv_text_color" format="color"/>
+        <attr name="iv_size" format="dimension"/>
+        <attr name="iv_corner_radius" format="dimension"/>
+        <attr name="iv_text_size" format="dimension"/>
+    </declare-styleable>
+</resources>

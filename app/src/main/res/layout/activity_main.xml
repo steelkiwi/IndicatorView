@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:background="@android:color/white"
+    android:layout_height="match_parent">
+
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <steelkiwi.com.library.view.IndicatorView
+        android:id="@+id/indicator"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true"
+        app:iv_bar_color="@android:color/black"
+        app:iv_corner_radius="4dp"
+        app:iv_idle_color="#999999"
+        app:iv_select_color="#555555"
+        app:iv_size="30dp"
+        app:iv_text_color="@android:color/white"
+        app:iv_text_size="12sp"/>
+</RelativeLayout>

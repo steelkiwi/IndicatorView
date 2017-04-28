@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="indicator_size">20dp</dimen>
+    <dimen name="indicator_margin">3dp</dimen>
+    <dimen name="indicator_bar_height">2dp</dimen>
+    <dimen name="indicator_bar_offset">5dp</dimen>
+    <dimen name="indicator_text_size">10sp</dimen>
+    <dimen name="indicator_corner_radius">2dp</dimen>
+</resources>
