@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +38,7 @@ public class TutorialAdapter extends CustomPagerAdapter<TutorialAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(TutorialAdapter.ViewHolder viewHolder, int position) {
-        int image = tutorialImage.get(position);
-        viewHolder.ivTutorialImage.setBackgroundResource(image);
+        viewHolder.text.setText(String.valueOf(position + 1));
     }
 
     @Override
@@ -53,11 +53,11 @@ public class TutorialAdapter extends CustomPagerAdapter<TutorialAdapter.ViewHold
     }
 
     public class ViewHolder extends CustomPagerAdapter.ViewHolder {
-        RelativeLayout ivTutorialImage;
+        TextView text;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            ivTutorialImage = (RelativeLayout) itemView.findViewById(R.id.ivImage);
+            text = (TextView) itemView.findViewById(R.id.text);
         }
     }
 }

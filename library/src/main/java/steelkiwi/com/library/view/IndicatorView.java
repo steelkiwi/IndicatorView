@@ -35,7 +35,7 @@ import steelkiwi.com.library.interpolator.BounceInterpolator;
 public class IndicatorView extends View implements IndicatorController {
     private static final int DEFAULT_POSITION = 0;
     // list of indicators
-    private List<IndicatorDrawable> drawables;
+    private List<IndicatorDrawable> drawables = new ArrayList<>();
     private Paint paint;
     // type indicator showing
     private IndicatorType type;
@@ -126,7 +126,6 @@ public class IndicatorView extends View implements IndicatorController {
     }
 
     private void prepareIndicatorItems(ViewPager viewPager) {
-        drawables = new ArrayList<>();
         int itemSize = viewPager.getAdapter().getCount();
         DrawableDecorator decorator = new DrawableDecorator();
         for(int i = 0; i < itemSize; i++) {
