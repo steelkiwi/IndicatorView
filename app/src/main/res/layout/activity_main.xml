@@ -16,7 +16,7 @@
     <steelkiwi.com.library.view.IndicatorView
         android:id="@+id/indicator"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         app:iv_bar_color="@android:color/black"
         app:iv_corner_radius="4dp"

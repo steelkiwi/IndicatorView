@@ -43,6 +43,8 @@ public class IndicatorView extends View implements IndicatorController {
     private Paint paint;
     // type indicator showing
     private IndicatorType type;
+    // view height
+    private int viewHeight;
     // canvas parameters
     private int canvasWidth;
     private int canvasHeight;
@@ -86,7 +88,7 @@ public class IndicatorView extends View implements IndicatorController {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int width = MeasureSpec.getSize(widthMeasureSpec);
-        int height = MeasureSpec.getSize(heightMeasureSpec);
+        int height = MeasureSpec.makeMeasureSpec(viewHeight, MeasureSpec.AT_MOST);
         setMeasuredDimension(width, height);
     }
 
@@ -167,6 +169,7 @@ public class IndicatorView extends View implements IndicatorController {
         setIndicatorBarHeight(getResources().getDimensionPixelSize(R.dimen.indicator_bar_height));
         maxIndicatorCornerRadius = getResources().getDimensionPixelSize(R.dimen.max_indicator_corner_radius);
         maxIndicatorSize = getResources().getDimensionPixelSize(R.dimen.max_indicator_item_size);
+        viewHeight = getResources().getDimensionPixelSize(R.dimen.view_height);
     }
 
     @Override
