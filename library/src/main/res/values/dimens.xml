@@ -6,4 +6,6 @@
     <dimen name="indicator_bar_offset">5dp</dimen>
     <dimen name="indicator_text_size">10sp</dimen>
     <dimen name="indicator_corner_radius">2dp</dimen>
+    <dimen name="max_indicator_corner_radius">5dp</dimen>
+    <dimen name="max_indicator_item_size">30dp</dimen>
 </resources>

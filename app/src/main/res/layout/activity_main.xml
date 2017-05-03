@@ -22,7 +22,8 @@
         app:iv_corner_radius="4dp"
         app:iv_idle_color="#999999"
         app:iv_select_color="#555555"
-        app:iv_size="30dp"
+        app:iv_size="40dp"
         app:iv_text_color="@android:color/white"
-        app:iv_text_size="12sp"/>
+        app:iv_text_size="12sp"
+        app:iv_action="hung_down"/>
 </RelativeLayout>

@@ -10,6 +10,9 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AnticipateOvershootInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 
 import java.util.ArrayList;
@@ -23,6 +26,7 @@ import steelkiwi.com.library.drawable.HangDownDrawable;
 import steelkiwi.com.library.drawable.IndicatorDrawable;
 import steelkiwi.com.library.drawable.LookUpDrawable;
 import steelkiwi.com.library.factory.DrawableFactory;
+import steelkiwi.com.library.interpolator.BounceInterpolator;
 
 /**
  * Created by yaroslav on 4/26/17.
@@ -34,14 +38,18 @@ public class IndicatorView extends View implements IndicatorController {
     private List<IndicatorDrawable> drawables;
     private Paint paint;
     // type indicator showing
-    private IndicatorType type = IndicatorType.HANG_DOWN;
+    private IndicatorType type;
     // canvas parameters
     private int canvasWidth;
     private int canvasHeight;
     // indicator item size
     private int indicatorSize;
+    // indicator max size
+    private int maxIndicatorSize;
     // indicator corner radius
     private int indicatorCornerRadius;
+    // max indicator corner radius
+    private int maxIndicatorCornerRadius;
     // margin between elements
     private int indicatorMargin;
     // color for selected state
@@ -87,8 +95,7 @@ public class IndicatorView extends View implements IndicatorController {
     private void prepareAttributes(AttributeSet attrs) {
         TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.IndicatorView);
         // prepare indicator size
-        setIndicatorSize(typedArray.getDimensionPixelSize(R.styleable.IndicatorView_iv_size,
-                getResources().getDimensionPixelSize(R.dimen.indicator_size)));
+        setIndicatorSize(typedArray.getDimensionPixelSize(R.styleable.IndicatorView_iv_size, getResources().getDimensionPixelSize(R.dimen.indicator_size)));
         // prepare indicator color for selected state
         setIndicatorSelectColor(typedArray.getColor(R.styleable.IndicatorView_iv_select_color,
                 ContextCompat.getColor(getContext(), R.color.indicator_selected_color)));
@@ -102,11 +109,11 @@ public class IndicatorView extends View implements IndicatorController {
         setIndicatorTextColor(typedArray.getColor(R.styleable.IndicatorView_iv_text_color,
                 ContextCompat.getColor(getContext(), R.color.indicator_text_color)));
         // prepare indicator text size
-        setIndicatorTextSize(typedArray.getDimensionPixelSize(R.styleable.IndicatorView_iv_text_size,
-                getResources().getDimensionPixelSize(R.dimen.indicator_text_size)));
+        setIndicatorTextSize(typedArray.getDimensionPixelSize(R.styleable.IndicatorView_iv_text_size, getResources().getDimensionPixelSize(R.dimen.indicator_text_size)));
         // prepare indicator corner radius
-        setIndicatorCornerRadius(typedArray.getDimensionPixelSize(R.styleable.IndicatorView_iv_corner_radius,
-                getResources().getDimensionPixelSize(R.dimen.indicator_corner_radius)));
+        setIndicatorCornerRadius(typedArray.getDimensionPixelSize(R.styleable.IndicatorView_iv_corner_radius, getResources().getDimensionPixelSize(R.dimen.indicator_corner_radius)));
+        // prepare default action for indicator
+        setActionType(IndicatorType.fromId(typedArray.getInt(R.styleable.IndicatorView_iv_action, 0)));
         typedArray.recycle();
     }
 
@@ -114,6 +121,8 @@ public class IndicatorView extends View implements IndicatorController {
         paint = new Paint();
         paint.setAntiAlias(true);
         paint.setColor(getIndicatorBarColor());
+        maxIndicatorCornerRadius = getResources().getDimensionPixelSize(R.dimen.max_indicator_corner_radius);
+        maxIndicatorSize = getResources().getDimensionPixelSize(R.dimen.max_indicator_item_size);
     }
 
     private void prepareIndicatorItems(ViewPager viewPager) {
@@ -121,7 +130,7 @@ public class IndicatorView extends View implements IndicatorController {
         int itemSize = viewPager.getAdapter().getCount();
         DrawableDecorator decorator = new DrawableDecorator();
         for(int i = 0; i < itemSize; i++) {
-            IndicatorDrawable drawable = DrawableFactory.createDrawable(getContext(), IndicatorType.HANG_DOWN);
+            IndicatorDrawable drawable = DrawableFactory.createDrawable(getContext(), getActionType());
             decorator.setDrawable(drawable)
                     .setBackgroundColor(getIndicatorIdleColor())
                     .setTextColor(getIndicatorTextColor())
@@ -141,7 +150,7 @@ public class IndicatorView extends View implements IndicatorController {
 
     private void prepareDefaultTypeForShow() {
         setIndicatorSelectColor(DEFAULT_POSITION, getIndicatorSelectColor());
-        switch (type) {
+        switch (getActionType()) {
             case HANG_DOWN:
                 rotate(DEFAULT_POSITION);
                 break;
@@ -170,7 +179,7 @@ public class IndicatorView extends View implements IndicatorController {
             }
         });
         angelAnimator.setDuration(1200);
-        angelAnimator.setInterpolator(new OvershootInterpolator());
+        angelAnimator.setInterpolator(new BounceInterpolator(.3, 10));
         angelAnimator.start();
     }
 
@@ -213,7 +222,7 @@ public class IndicatorView extends View implements IndicatorController {
     public void showDown(int position) {
         final IndicatorDrawable drawable = drawables.get(position);
         int top = (getMeasuredHeight() / 2) - getHalfIndicatorSize() - (getIndicatorBarHeight() * 2);
-        ValueAnimator angelAnimator = ValueAnimator.ofInt(top, top - getHalfIndicatorSize());
+        ValueAnimator angelAnimator = ValueAnimator.ofInt(top, top - getHalfIndicatorSize() - 3);
         angelAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
@@ -236,17 +245,6 @@ public class IndicatorView extends View implements IndicatorController {
         // draw indicator by type
         drawIndicator(canvas);
     }
-
-//    private void onTypeDraw(final Canvas canvas) {
-//        switch (type) {
-//            case HANG_DOWN:
-//                drawIndicator(canvas);
-//                break;
-//            case LOOK_OUT:
-//                drawLookUpIndicator(canvas);
-//                break;
-//        }
-//    }
 
     @Override
     public void attachViewPager(ViewPager viewPager) {
@@ -281,18 +279,6 @@ public class IndicatorView extends View implements IndicatorController {
         }
     }
 
-//    private void drawLookUpIndicator(final Canvas canvas) {
-//        int left = canvasWidth / 2 - calculateAllItemsWidth() / 2;
-//        int top = getHalfCanvasHeight() - getHalfIndicatorSize();
-//        int bottom = (getHalfCanvasHeight() - getHalfIndicatorSize()) + getIndicatorSize() - getIndicatorMargin();
-//        for (int i = 0; i < drawables.size(); i++) {
-//            IndicatorDrawable drawable = drawables.get(i);
-//            drawable.setPosition(i + 1);
-//            drawable.setBounds(left + getIndicatorSize() * i, top, (left + getIndicatorSize() + (getIndicatorSize() * i)) - getIndicatorMargin(), bottom);
-//            drawable.draw(canvas);
-//        }
-//    }
-
     @Override
     public void onPageChanged(int position) {
         if(getPreviousPosition() < position) {
@@ -324,7 +310,7 @@ public class IndicatorView extends View implements IndicatorController {
     }
 
     private void startActionByType(int position) {
-        switch (type) {
+        switch (getActionType()) {
             case HANG_DOWN:
                 rotate(position);
                 break;
@@ -335,7 +321,7 @@ public class IndicatorView extends View implements IndicatorController {
     }
 
     private void returnActionByType(int position) {
-        switch (type) {
+        switch (getActionType()) {
             case HANG_DOWN:
                 rotateBack(position);
                 break;
@@ -430,6 +416,9 @@ public class IndicatorView extends View implements IndicatorController {
     }
 
     private int getIndicatorSize() {
+        if(indicatorSize > maxIndicatorSize) {
+            return maxIndicatorSize;
+        }
         return indicatorSize;
     }
 
@@ -442,6 +431,9 @@ public class IndicatorView extends View implements IndicatorController {
     }
 
     public int getIndicatorCornerRadius() {
+        if(indicatorCornerRadius > maxIndicatorCornerRadius) {
+            return maxIndicatorCornerRadius;
+        }
         return indicatorCornerRadius;
     }
 
@@ -449,7 +441,11 @@ public class IndicatorView extends View implements IndicatorController {
         this.indicatorCornerRadius = indicatorCornerRadius;
     }
 
-    public void setType(IndicatorType type) {
+    public IndicatorType getActionType() {
+        return type;
+    }
+
+    public void setActionType(IndicatorType type) {
         this.type = type;
     }
 }
