@@ -19,11 +19,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         app:iv_bar_color="@android:color/black"
-        app:iv_corner_radius="4dp"
-        app:iv_idle_color="#999999"
-        app:iv_select_color="#666666"
-        app:iv_size="40dp"
+        app:iv_corner_radius="@dimen/radius"
+        app:iv_idle_color="@color/item_idle_color"
+        app:iv_select_color="@color/item_select_color"
+        app:iv_size="@dimen/item_size"
         app:iv_text_color="@android:color/white"
-        app:iv_text_size="12sp"
+        app:iv_text_size="@dimen/text_size"
         app:iv_action="hung_down"/>
 </RelativeLayout>

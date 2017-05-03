@@ -4,6 +4,6 @@
     <color name="colorPrimaryDark">#b93b04</color>
     <color name="colorAccent">#FF4081</color>
     <color name="color1">#dc602a</color>
-    <color name="color2">#ff4d00</color>
-    <color name="color3">#b93b04</color>
+    <color name="item_idle_color">#999999</color>
+    <color name="item_select_color">#666666</color>
 </resources>
