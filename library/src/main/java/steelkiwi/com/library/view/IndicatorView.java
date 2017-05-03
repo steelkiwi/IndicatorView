@@ -34,6 +34,10 @@ import steelkiwi.com.library.interpolator.BounceInterpolator;
 
 public class IndicatorView extends View implements IndicatorController {
     private static final int DEFAULT_POSITION = 0;
+    private static final int DELAY = 1200;
+    private static final int ROTATE_ANGLE = 45;
+    private static final double AMPLITUDE = .3; // amplitude for interpolator
+    private static final double FREQUENCY = 10; // frequency of rotating
     // list of indicators
     private List<IndicatorDrawable> drawables = new ArrayList<>();
     private Paint paint;
@@ -121,8 +125,6 @@ public class IndicatorView extends View implements IndicatorController {
         paint = new Paint();
         paint.setAntiAlias(true);
         paint.setColor(getIndicatorBarColor());
-        maxIndicatorCornerRadius = getResources().getDimensionPixelSize(R.dimen.max_indicator_corner_radius);
-        maxIndicatorSize = getResources().getDimensionPixelSize(R.dimen.max_indicator_item_size);
     }
 
     private void prepareIndicatorItems(ViewPager viewPager) {
@@ -163,12 +165,14 @@ public class IndicatorView extends View implements IndicatorController {
         setIndicatorMargin(getResources().getDimensionPixelSize(R.dimen.indicator_margin));
         setIndicatorBarOffset(getResources().getDimensionPixelSize(R.dimen.indicator_bar_offset));
         setIndicatorBarHeight(getResources().getDimensionPixelSize(R.dimen.indicator_bar_height));
+        maxIndicatorCornerRadius = getResources().getDimensionPixelSize(R.dimen.max_indicator_corner_radius);
+        maxIndicatorSize = getResources().getDimensionPixelSize(R.dimen.max_indicator_item_size);
     }
 
     @Override
     public void rotate(final int position) {
         final IndicatorDrawable drawable = drawables.get(position);
-        ValueAnimator angelAnimator = ValueAnimator.ofInt(0, 45);
+        ValueAnimator angelAnimator = ValueAnimator.ofInt(0, ROTATE_ANGLE);
         angelAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
@@ -177,15 +181,15 @@ public class IndicatorView extends View implements IndicatorController {
                 invalidate();
             }
         });
-        angelAnimator.setDuration(1200);
-        angelAnimator.setInterpolator(new BounceInterpolator(.3, 10));
+        angelAnimator.setDuration(DELAY);
+        angelAnimator.setInterpolator(new BounceInterpolator(AMPLITUDE, FREQUENCY));
         angelAnimator.start();
     }
 
     @Override
     public void rotateBack(final int position) {
         final IndicatorDrawable drawable = drawables.get(position);
-        ValueAnimator angelAnimator = ValueAnimator.ofInt(45, 0);
+        ValueAnimator angelAnimator = ValueAnimator.ofInt(ROTATE_ANGLE, 0);
         angelAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
@@ -194,7 +198,7 @@ public class IndicatorView extends View implements IndicatorController {
                 invalidate();
             }
         });
-        angelAnimator.setDuration(1200);
+        angelAnimator.setDuration(DELAY);
         angelAnimator.setInterpolator(new OvershootInterpolator());
         angelAnimator.start();
     }
@@ -212,7 +216,7 @@ public class IndicatorView extends View implements IndicatorController {
                 invalidate();
             }
         });
-        angelAnimator.setDuration(1200);
+        angelAnimator.setDuration(DELAY);
         angelAnimator.setInterpolator(new OvershootInterpolator());
         angelAnimator.start();
     }
@@ -230,7 +234,7 @@ public class IndicatorView extends View implements IndicatorController {
                 invalidate();
             }
         });
-        angelAnimator.setDuration(1200);
+        angelAnimator.setDuration(DELAY);
         angelAnimator.setInterpolator(new OvershootInterpolator());
         angelAnimator.start();
     }
