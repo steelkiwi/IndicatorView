@@ -1,4 +1,4 @@
-package steelkiwi.com.library;
+package steelkiwi.com.library.utils;
 
 import android.support.v4.view.ViewPager;
 import android.util.Log;

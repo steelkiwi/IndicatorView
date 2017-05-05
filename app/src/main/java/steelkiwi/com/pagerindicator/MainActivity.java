@@ -23,15 +23,35 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         List<Integer> images = new ArrayList<>();
-        images.add(R.color.color1);
-        images.add(R.color.color2);
-        images.add(R.color.color3);
-        images.add(R.color.color1);
-        images.add(R.color.color2);
-        images.add(R.color.color3);
-        images.add(R.color.color1);
-        images.add(R.color.color2);
-        images.add(R.color.color3);
+        images.add(R.color.color1);//1
+        images.add(R.color.color1);//2
+        images.add(R.color.color1);//3
+        images.add(R.color.color1);//4
+        images.add(R.color.color1);//5
+        images.add(R.color.color1);//6
+        images.add(R.color.color1);//7
+        images.add(R.color.color1);//8
+        images.add(R.color.color1);//9
+        images.add(R.color.color1);//10
+        images.add(R.color.color1);//11
+        images.add(R.color.color1);//12
+        images.add(R.color.color1);//13
+        images.add(R.color.color1);//14
+
+        images.add(R.color.color1);//1
+        images.add(R.color.color1);//2
+        images.add(R.color.color1);//3
+        images.add(R.color.color1);//4
+        images.add(R.color.color1);//5
+        images.add(R.color.color1);//6
+        images.add(R.color.color1);//7
+        images.add(R.color.color1);//8
+        images.add(R.color.color1);//9
+        images.add(R.color.color1);//10
+        images.add(R.color.color1);//11
+        images.add(R.color.color1);//12
+        images.add(R.color.color1);//13
+        images.add(R.color.color1);//14
 
         TutorialAdapter adapter = new TutorialAdapter(this);
 

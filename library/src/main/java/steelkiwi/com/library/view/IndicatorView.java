@@ -8,25 +8,24 @@ import android.graphics.Paint;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AnticipateOvershootInterpolator;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import steelkiwi.com.library.IndicatorType;
-import steelkiwi.com.library.drawable.DrawableDecorator;
-import steelkiwi.com.library.OnPageChangeListener;
 import steelkiwi.com.library.R;
+import steelkiwi.com.library.drawable.DrawableDecorator;
 import steelkiwi.com.library.drawable.HangDownDrawable;
 import steelkiwi.com.library.drawable.IndicatorDrawable;
 import steelkiwi.com.library.drawable.LookUpDrawable;
 import steelkiwi.com.library.factory.DrawableFactory;
 import steelkiwi.com.library.interpolator.BounceInterpolator;
+import steelkiwi.com.library.utils.OnPageChangeListener;
+import steelkiwi.com.library.utils.Position;
 
 /**
  * Created by yaroslav on 4/26/17.
@@ -36,13 +35,20 @@ public class IndicatorView extends View implements IndicatorController {
     private static final int DEFAULT_POSITION = 0;
     private static final int DELAY = 1200;
     private static final int ROTATE_ANGLE = 45;
-    private static final double AMPLITUDE = .3; // amplitude for interpolator
-    private static final double FREQUENCY = 10; // frequency of rotating
+    // amplitude for interpolator
+    private static final double AMPLITUDE = .3;
+    // frequency of rotating
+    private static final double FREQUENCY = 10;
+    // max count of the items in the screen
+    private static final int MAX_ITEM_IN_SCREEN = 6;
+
     // list of indicators
-    private List<IndicatorDrawable> drawables = new ArrayList<>();
+    private List<IndicatorDrawable> allDrawables = new ArrayList<>();
     private Paint paint;
     // type indicator showing
     private IndicatorType type;
+    // items amount
+    private int itemSize;
     // view height
     private int viewHeight;
     // canvas parameters
@@ -74,6 +80,16 @@ public class IndicatorView extends View implements IndicatorController {
     private int indicatorBarColor;
     // left and right bar offset
     private int indicatorBarOffset;
+    // start index to draw items
+    private int startIndex = 0;
+    // default items size
+    private int size = MAX_ITEM_IN_SCREEN;
+    // current page of items
+    private int currentPage = 0;
+    // start position of the first item from other page
+    private int startPosition = 0;
+    // array to save start and end position each page
+    private SparseArray<Position> positions = new SparseArray<>();
 
     public IndicatorView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -130,9 +146,9 @@ public class IndicatorView extends View implements IndicatorController {
     }
 
     private void prepareIndicatorItems(ViewPager viewPager) {
-        int itemSize = viewPager.getAdapter().getCount();
+        setItemSize(viewPager.getAdapter().getCount());
         DrawableDecorator decorator = new DrawableDecorator();
-        for(int i = 0; i < itemSize; i++) {
+        for(int i = 0; i < getItemSize(); i++) {
             IndicatorDrawable drawable = DrawableFactory.createDrawable(getContext(), getActionType());
             decorator.setDrawable(drawable)
                     .setBackgroundColor(getIndicatorIdleColor())
@@ -140,7 +156,7 @@ public class IndicatorView extends View implements IndicatorController {
                     .setTextSize(getIndicatorTextSize())
                     .setCornerRadius(getIndicatorCornerRadius())
                     .decorate();
-            drawables.add(drawable);
+            allDrawables.add(drawable);
         }
         getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -174,7 +190,7 @@ public class IndicatorView extends View implements IndicatorController {
 
     @Override
     public void rotate(final int position) {
-        final IndicatorDrawable drawable = drawables.get(position);
+        final IndicatorDrawable drawable = getDrawable(position);
         ValueAnimator angelAnimator = ValueAnimator.ofInt(0, ROTATE_ANGLE);
         angelAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -191,7 +207,7 @@ public class IndicatorView extends View implements IndicatorController {
 
     @Override
     public void rotateBack(final int position) {
-        final IndicatorDrawable drawable = drawables.get(position);
+        final IndicatorDrawable drawable = getDrawable(position);
         ValueAnimator angelAnimator = ValueAnimator.ofInt(ROTATE_ANGLE, 0);
         angelAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -208,7 +224,7 @@ public class IndicatorView extends View implements IndicatorController {
 
     @Override
     public void showUp(int position) {
-        final IndicatorDrawable drawable = drawables.get(position);
+        final IndicatorDrawable drawable = getDrawable(position);
         int top = (getMeasuredHeight() / 2) - getHalfIndicatorSize() - getIndicatorBarHeight();
         ValueAnimator angelAnimator = ValueAnimator.ofInt(top - getHalfIndicatorSize(), top);
         angelAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -226,7 +242,7 @@ public class IndicatorView extends View implements IndicatorController {
 
     @Override
     public void showDown(int position) {
-        final IndicatorDrawable drawable = drawables.get(position);
+        final IndicatorDrawable drawable = getDrawable(position);
         int top = (getMeasuredHeight() / 2) - getHalfIndicatorSize() - (getIndicatorBarHeight() * 2);
         ValueAnimator angelAnimator = ValueAnimator.ofInt(top, top - getHalfIndicatorSize() - 3);
         angelAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -274,14 +290,17 @@ public class IndicatorView extends View implements IndicatorController {
     }
 
     private void drawIndicator(final Canvas canvas) {
+        int leftMargin = 0;
         int left = canvasWidth / 2 - calculateAllItemsWidth() / 2;
         int top = getHalfCanvasHeight() - getHalfIndicatorSize();
         int bottom = (getHalfCanvasHeight() - getHalfIndicatorSize()) + getIndicatorSize() - getIndicatorMargin();
-        for (int i = 0; i < drawables.size(); i++) {
-            IndicatorDrawable drawable = drawables.get(i);
+        for (int i = getStartIndex(); i < getSize(); i++) {
+            IndicatorDrawable drawable = allDrawables.get(i);
             drawable.setPosition(i + 1);
-            drawable.setBounds(left + getIndicatorSize() * i, top, (left + getIndicatorSize() + (getIndicatorSize() * i)) - getIndicatorMargin(), bottom);
+            drawable.setBounds(left + getIndicatorSize() * leftMargin, top,
+                    (left + getIndicatorSize() + (getIndicatorSize() * leftMargin)) - getIndicatorMargin(), bottom);
             drawable.draw(canvas);
+            leftMargin++;
         }
     }
 
@@ -296,9 +315,12 @@ public class IndicatorView extends View implements IndicatorController {
     }
 
     private void onSwipeRight(int position) {
-        // swipe right
+        // check if need change items page
+        changePage(position);
+        // swipe right side
         startActionByType(position);
         setIndicatorSelectColor(position, getIndicatorSelectColor());
+        // return back previous item
         if (position > 0) {
             returnActionByType(position - 1);
             setIndicatorSelectColor(position - 1, getIndicatorIdleColor());
@@ -306,12 +328,66 @@ public class IndicatorView extends View implements IndicatorController {
     }
 
     private void onSwipeLeft(int position) {
-        // swipe left
+        preparePreviousPageParameters(position);
+        prepareStartPosition();
+        // swipe left side
         startActionByType(position);
         setIndicatorSelectColor(position , getIndicatorSelectColor());
-        if (position < drawables.size()) {
+        // return back previous item
+        if (position < allDrawables.size()) {
             returnActionByType(position + 1);
             setIndicatorSelectColor(position + 1, getIndicatorIdleColor());
+        }
+    }
+
+    private void changePage(int position) {
+        if(position == getSize()) {
+            savePageParameters(position);
+            prepareIndexForDrawing(position);
+            prepareNextPageParameters(position);
+        }
+    }
+
+    // save start and end position
+    // it will use after scroll to another page
+    private void savePageParameters(int position) {
+        Position pagePosition = new Position(getStartPosition(), position);
+        positions.put(getCurrentPage(), pagePosition);
+    }
+
+    // parameter to draw properly
+    private void prepareIndexForDrawing(int position) {
+        setStartIndex(position);
+        size += getLastItemsRange(position);
+    }
+
+    private void prepareNextPageParameters(int position) {
+        if(position != allDrawables.size() - 1) {
+            currentPage++;
+            startPosition += getLastItemsRange(position);
+        }
+    }
+
+    private void preparePreviousPageParameters(int position) {
+        Position pagePosition = positions.get(getCurrentPage() - 1);
+        if(pagePosition != null && position == pagePosition.getEnd() - 1) {
+            decrementPage();
+            setStartIndex(pagePosition.getStart());
+            setSize(pagePosition.getEnd());
+        }
+    }
+
+    // prepare start position for draw items properly
+    private void prepareStartPosition() {
+        Position position = positions.get(getCurrentPage());
+        if(position != null) {
+            setStartPosition(position.getStart());
+        }
+    }
+
+    private void decrementPage() {
+        if(getCurrentPage() > 0) {
+            currentPage--;
         }
     }
 
@@ -338,7 +414,17 @@ public class IndicatorView extends View implements IndicatorController {
     }
 
     private int calculateAllItemsWidth() {
-        return getIndicatorSize() * drawables.size();
+        return getIndicatorSize() * getLastItemsRange(getStartIndex());
+    }
+
+    // get right item range to show it in the screen
+    private int getLastItemsRange(int position) {
+        int different = itemSize - position;
+        return different >= MAX_ITEM_IN_SCREEN ? MAX_ITEM_IN_SCREEN : different;
+    }
+
+    private IndicatorDrawable getDrawable(int position) {
+        return allDrawables.get(position);
     }
 
     private int getHalfIndicatorSize() {
@@ -350,7 +436,7 @@ public class IndicatorView extends View implements IndicatorController {
     }
 
     private void setIndicatorSelectColor(int position, int color) {
-        drawables.get(position).setSelectColor(color);
+        allDrawables.get(position).setSelectColor(color);
     }
 
     private int getPreviousPosition() {
@@ -434,6 +520,42 @@ public class IndicatorView extends View implements IndicatorController {
 
     private void setIndicatorMargin(int indicatorMargin) {
         this.indicatorMargin = indicatorMargin;
+    }
+
+    private int getItemSize() {
+        return itemSize;
+    }
+
+    private void setItemSize(int itemSize) {
+        this.itemSize = itemSize;
+    }
+
+    private int getSize() {
+        return size;
+    }
+
+    private void setSize(int size) {
+        this.size = size;
+    }
+
+    private int getStartIndex() {
+        return startIndex;
+    }
+
+    private void setStartIndex(int startIndex) {
+        this.startIndex = startIndex;
+    }
+
+    private int getCurrentPage() {
+        return currentPage;
+    }
+
+    private int getStartPosition() {
+        return startPosition;
+    }
+
+    private void setStartPosition(int startPosition) {
+        this.startPosition = startPosition;
     }
 
     public int getIndicatorCornerRadius() {
