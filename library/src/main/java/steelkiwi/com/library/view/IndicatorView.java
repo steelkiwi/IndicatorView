@@ -72,6 +72,8 @@ public class IndicatorView extends View implements IndicatorController {
     private int indicatorTextColor;
     // size for text
     private float indicatorTextSize;
+    // visible item amount
+    private int visibleItems;
     // previous item position to handle swipe direction
     private int previousPosition;
     // background bar height
@@ -83,7 +85,7 @@ public class IndicatorView extends View implements IndicatorController {
     // start index to draw items
     private int startIndex = 0;
     // default items size
-    private int size = MAX_ITEM_IN_SCREEN;
+    private int size;
     // current page of items
     private int currentPage = 0;
     // start position of the first item from other page
@@ -112,6 +114,7 @@ public class IndicatorView extends View implements IndicatorController {
         prepareIndicatorItemsSize();
         prepareAttributes(attrs);
         preparePaint();
+        setSize(getVisibleItems());
     }
 
     private void prepareAttributes(AttributeSet attrs) {
@@ -136,6 +139,8 @@ public class IndicatorView extends View implements IndicatorController {
         setIndicatorCornerRadius(typedArray.getDimensionPixelSize(R.styleable.IndicatorView_iv_corner_radius, getResources().getDimensionPixelSize(R.dimen.indicator_corner_radius)));
         // prepare default action for indicator
         setActionType(IndicatorType.fromId(typedArray.getInt(R.styleable.IndicatorView_iv_action, 0)));
+        // prepare amount of item in the screen
+        setVisibleItems(typedArray.getInt(R.styleable.IndicatorView_iv_item_amount, MAX_ITEM_IN_SCREEN));
         typedArray.recycle();
     }
 
@@ -419,8 +424,8 @@ public class IndicatorView extends View implements IndicatorController {
 
     // get right item range to show it in the screen
     private int getLastItemsRange(int position) {
-        int different = itemSize - position;
-        return different >= MAX_ITEM_IN_SCREEN ? MAX_ITEM_IN_SCREEN : different;
+        int different = getItemSize() - position;
+        return different >= getVisibleItems() ? getVisibleItems() : different;
     }
 
     private IndicatorDrawable getDrawable(int position) {
@@ -556,6 +561,14 @@ public class IndicatorView extends View implements IndicatorController {
 
     private void setStartPosition(int startPosition) {
         this.startPosition = startPosition;
+    }
+
+    public int getVisibleItems() {
+        return visibleItems;
+    }
+
+    public void setVisibleItems(int visibleItems) {
+        this.visibleItems = visibleItems;
     }
 
     public int getIndicatorCornerRadius() {

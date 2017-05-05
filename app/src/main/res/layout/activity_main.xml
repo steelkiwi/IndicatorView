@@ -25,5 +25,6 @@
         app:iv_size="@dimen/item_size"
         app:iv_text_color="@android:color/white"
         app:iv_text_size="@dimen/text_size"
-        app:iv_action="hung_down"/>
+        app:iv_action="hung_down"
+        app:iv_item_amount="8"/>
 </RelativeLayout>

@@ -12,5 +12,6 @@
             <enum name="hung_down" value="0"/>
             <enum name="look_up" value="1"/>
         </attr>
+        <attr name="iv_item_amount" format="integer"/>
     </declare-styleable>
 </resources>
