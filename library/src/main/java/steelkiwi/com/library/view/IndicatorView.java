@@ -12,6 +12,7 @@ import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.OvershootInterpolator;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,7 @@ import steelkiwi.com.library.drawable.IndicatorDrawable;
 import steelkiwi.com.library.drawable.LookUpDrawable;
 import steelkiwi.com.library.factory.DrawableFactory;
 import steelkiwi.com.library.interpolator.BounceInterpolator;
+import steelkiwi.com.library.utils.DrawableTouchListener;
 import steelkiwi.com.library.utils.OnPageChangeListener;
 import steelkiwi.com.library.utils.Position;
 
@@ -42,6 +44,8 @@ public class IndicatorView extends View implements IndicatorController {
     // max count of the items in the screen
     private static final int MAX_ITEM_IN_SCREEN = 6;
 
+    // view pager instance
+    private ViewPager viewPager;
     // list of indicators
     private List<IndicatorDrawable> allDrawables = new ArrayList<>();
     private Paint paint;
@@ -170,6 +174,14 @@ public class IndicatorView extends View implements IndicatorController {
                 getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
+        setOnTouchListener();
+    }
+
+    private void setOnTouchListener() {
+        // set start and end position to manage drawable click properly
+        drawableTouchListener.setStartIndex(getStartIndex());
+        drawableTouchListener.setSize(getSize());
+        setOnTouchListener(drawableTouchListener);
     }
 
     private void prepareDefaultTypeForShow() {
@@ -275,6 +287,7 @@ public class IndicatorView extends View implements IndicatorController {
 
     @Override
     public void attachViewPager(ViewPager viewPager) {
+        this.viewPager = viewPager;
         prepareIndicatorItems(viewPager);
         viewPager.addOnPageChangeListener(new OnPageChangeListener() {
             @Override
@@ -364,6 +377,9 @@ public class IndicatorView extends View implements IndicatorController {
     private void prepareIndexForDrawing(int position) {
         setStartIndex(position);
         size += getLastItemsRange(position);
+        // set start and end position to manage drawable click properly
+        drawableTouchListener.setStartIndex(getStartIndex());
+        drawableTouchListener.setSize(getSize());
     }
 
     private void prepareNextPageParameters(int position) {
@@ -379,6 +395,9 @@ public class IndicatorView extends View implements IndicatorController {
             decrementPage();
             setStartIndex(pagePosition.getStart());
             setSize(pagePosition.getEnd());
+            // set start and end position to manage drawable click properly
+            drawableTouchListener.setStartIndex(pagePosition.getStart());
+            drawableTouchListener.setSize(pagePosition.getEnd());
         }
     }
 
@@ -417,6 +436,16 @@ public class IndicatorView extends View implements IndicatorController {
                 break;
         }
     }
+
+    private DrawableTouchListener drawableTouchListener = new DrawableTouchListener(allDrawables) {
+        @Override
+        public boolean onDrawableTouch(int currentPosition, int previousPosition) {
+            viewPager.setCurrentItem(currentPosition);
+            rotateBack(previousPosition);
+            setIndicatorSelectColor(previousPosition, getIndicatorIdleColor());
+            return true;
+        }
+    };
 
     private int calculateAllItemsWidth() {
         return getIndicatorSize() * getLastItemsRange(getStartIndex());
