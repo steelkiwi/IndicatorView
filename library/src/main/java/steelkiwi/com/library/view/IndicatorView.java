@@ -1,7 +1,5 @@
 package steelkiwi.com.library.view;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -18,7 +16,6 @@ import android.view.animation.OvershootInterpolator;
 import java.util.ArrayList;
 import java.util.List;
 
-import steelkiwi.com.library.utils.IndicatorType;
 import steelkiwi.com.library.R;
 import steelkiwi.com.library.drawable.DrawableDecorator;
 import steelkiwi.com.library.drawable.HangDownDrawable;
@@ -27,6 +24,7 @@ import steelkiwi.com.library.drawable.LookUpDrawable;
 import steelkiwi.com.library.factory.DrawableFactory;
 import steelkiwi.com.library.interpolator.BounceInterpolator;
 import steelkiwi.com.library.utils.DrawableTouchListener;
+import steelkiwi.com.library.utils.IndicatorType;
 import steelkiwi.com.library.utils.OnPageChangeListener;
 import steelkiwi.com.library.utils.Position;
 
@@ -309,17 +307,19 @@ public class IndicatorView extends View implements IndicatorController {
     }
 
     private void drawIndicator(final Canvas canvas) {
-        int leftMargin = 0;
-        int left = canvasWidth / 2 - calculateAllItemsWidth() / 2;
-        int top = getHalfCanvasHeight() - getHalfIndicatorSize();
-        int bottom = (getHalfCanvasHeight() - getHalfIndicatorSize()) + getIndicatorSize() - getIndicatorMargin();
-        for (int i = getStartIndex(); i < getSize(); i++) {
-            IndicatorDrawable drawable = getDrawable(i);
-            drawable.setPosition(i + 1);
-            drawable.setBounds(left + getIndicatorSize() * leftMargin, top,
-                    (left + getIndicatorSize() + (getIndicatorSize() * leftMargin)) - getIndicatorMargin(), bottom);
-            drawable.draw(canvas);
-            leftMargin++;
+        if(!allDrawables.isEmpty()) {
+            int leftMargin = 0;
+            int left = canvasWidth / 2 - calculateAllItemsWidth() / 2;
+            int top = getHalfCanvasHeight() - getHalfIndicatorSize();
+            int bottom = (getHalfCanvasHeight() - getHalfIndicatorSize()) + getIndicatorSize() - getIndicatorMargin();
+            for (int i = getStartIndex(); i < getSize(); i++) {
+                IndicatorDrawable drawable = getDrawable(i);
+                drawable.setPosition(i + 1);
+                drawable.setBounds(left + getIndicatorSize() * leftMargin, top,
+                        (left + getIndicatorSize() + (getIndicatorSize() * leftMargin)) - getIndicatorMargin(), bottom);
+                drawable.draw(canvas);
+                leftMargin++;
+            }
         }
     }
 

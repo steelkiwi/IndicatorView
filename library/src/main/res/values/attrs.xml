@@ -9,7 +9,7 @@
         <attr name="iv_corner_radius" format="dimension"/>
         <attr name="iv_text_size" format="dimension"/>
         <attr name="iv_action">
-            <enum name="hung_down" value="0"/>
+            <enum name="hang_down" value="0"/>
             <enum name="look_up" value="1"/>
         </attr>
         <attr name="iv_item_amount" format="integer"/>

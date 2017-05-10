@@ -34,7 +34,7 @@ Add IndicatorView to your xml layout
     app:iv_size="@dimen/item_size"
     app:iv_text_color="@android:color/white"
     app:iv_text_size="@dimen/text_size"
-    app:iv_action="hung_down|look_up"
+    app:iv_action="hang_down"
     app:iv_item_amount="6"/>
 ```
 
@@ -47,7 +47,7 @@ You can customize view like you want, through this attributes
  * app:iv_size - indicator item size
  * app:iv_text_color - indicator item text color
  * app:iv_text_size - indicator item text size
- * app:iv_action - indicator item show action type
+ * app:iv_action - type of animation to show each item, by default hang_down (hang_down|look_up)
  * app:iv_item_amount - visible items amount
 
 Don`t forget to initialize IndicatorView and attach ViewPager to it
