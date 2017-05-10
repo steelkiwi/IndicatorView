@@ -2,8 +2,12 @@
 
 [![Made in SteelKiwi](https://github.com/steelkiwi/IndicatorView/blob/master/assets/made_in_steelkiwi.png)](http://steelkiwi.com/blog/)
 
-View to indicate current page of the view pager
+IndicatorView to highlight current viewpager position
 
+## Description
+
+It's flexible and expandable component, no matter what amount of items you use it will always show items properly.
+Also you have a possibility to customize it how you want and you can pick type of animation what you like, to show each item
 
 ## Download
 
