@@ -1,10 +1,11 @@
 # IndicatorView
 
-View to indicate current page of the view pager
-
 [![Made in SteelKiwi](https://github.com/steelkiwi/IndicatorView/blob/master/assets/made_in_steelkiwi.png)](http://steelkiwi.com/blog/)
 
-##Download
+View to indicate current page of the view pager
+
+
+## Download
 
 Download via Gradle:
 
@@ -12,7 +13,7 @@ Download via Gradle:
 compile 'com.steelkiwi:indicator-view:1.0.0'
 ```
 
-##Usage
+## Usage
 
 Add IndicatorView to your xml layout
 
