@@ -2,17 +2,17 @@
 
 View to indicate current page of the view pager
 
-#View
+[![Made in SteelKiwi](https://github.com/steelkiwi/IndicatorView/tree/master/assets/made_in_steelkiwi.png)](http://steelkiwi.com/blog/)
 
-#Download
+##Download
 
 Download via Gradle:
 
 ```gradle
-soon
+compile 'com.steelkiwi:indicator-view:1.0.0'
 ```
 
-#Usage
+##Usage
 
 Add IndicatorView to your xml layout
 
@@ -29,7 +29,8 @@ Add IndicatorView to your xml layout
     app:iv_size="@dimen/item_size"
     app:iv_text_color="@android:color/white"
     app:iv_text_size="@dimen/text_size"
-    app:iv_action="hung_down|look_up"/>
+    app:iv_action="hung_down|look_up"
+    app:iv_item_amount="6"/>
 ```
 
 You can customize view like you want, through this attributes
@@ -42,6 +43,7 @@ You can customize view like you want, through this attributes
  * app:iv_text_color - indicator item text color
  * app:iv_text_size - indicator item text size
  * app:iv_action - indicator item show action type
+ * app:iv_item_amount - visible items amount
 
 Don`t forget to initialize IndicatorView and attach ViewPager to it
 

@@ -314,7 +314,7 @@ public class IndicatorView extends View implements IndicatorController {
         int top = getHalfCanvasHeight() - getHalfIndicatorSize();
         int bottom = (getHalfCanvasHeight() - getHalfIndicatorSize()) + getIndicatorSize() - getIndicatorMargin();
         for (int i = getStartIndex(); i < getSize(); i++) {
-            IndicatorDrawable drawable = allDrawables.get(i);
+            IndicatorDrawable drawable = getDrawable(i);
             drawable.setPosition(i + 1);
             drawable.setBounds(left + getIndicatorSize() * leftMargin, top,
                     (left + getIndicatorSize() + (getIndicatorSize() * leftMargin)) - getIndicatorMargin(), bottom);
@@ -325,7 +325,6 @@ public class IndicatorView extends View implements IndicatorController {
 
     @Override
     public void onPageChanged(int position) {
-        drawableTouchListener.setCurrentPosition(position);
         if(getPreviousPosition() < position) {
             onSwipeRight(position);
         } else {
