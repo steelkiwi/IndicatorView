@@ -2,7 +2,7 @@
 
 View to indicate current page of the view pager
 
-[![Made in SteelKiwi](https://github.com/steelkiwi/IndicatorView/tree/master/assets/made_in_steelkiwi.png)](http://steelkiwi.com/blog/)
+[![Made in SteelKiwi](https://github.com/steelkiwi/IndicatorView/blob/master/assets/made_in_steelkiwi.png)](http://steelkiwi.com/blog/)
 
 ##Download
 
