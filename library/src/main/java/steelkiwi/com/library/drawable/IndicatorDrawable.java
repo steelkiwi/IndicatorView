@@ -30,6 +30,8 @@ public abstract class IndicatorDrawable extends Drawable {
     private int cornerRadius;
     // position for show it like text
     private int position;
+    //
+    private boolean isSelected;
 
     public IndicatorDrawable(Context context) {
         this.context = context;
@@ -129,4 +131,11 @@ public abstract class IndicatorDrawable extends Drawable {
         indicatorPaint.setColor(color);
     }
 
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
 }

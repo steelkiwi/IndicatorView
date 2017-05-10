@@ -2,7 +2,7 @@ package steelkiwi.com.library.factory;
 
 import android.content.Context;
 
-import steelkiwi.com.library.IndicatorType;
+import steelkiwi.com.library.utils.IndicatorType;
 import steelkiwi.com.library.drawable.HangDownDrawable;
 import steelkiwi.com.library.drawable.IndicatorDrawable;
 import steelkiwi.com.library.drawable.LookUpDrawable;

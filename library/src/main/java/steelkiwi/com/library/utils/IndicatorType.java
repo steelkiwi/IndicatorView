@@ -1,4 +1,4 @@
-package steelkiwi.com.library;
+package steelkiwi.com.library.utils;
 
 /**
  * Created by yaroslav on 4/28/17.

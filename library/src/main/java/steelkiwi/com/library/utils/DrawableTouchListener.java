@@ -33,13 +33,21 @@ public abstract class DrawableTouchListener implements View.OnTouchListener {
                 final IndicatorDrawable drawable = drawables.get(i);
                 final Rect rect = drawable.getBounds();
                 if (rect.contains(x, y)) {
-                    previousPosition = currentPosition;
-                    currentPosition = i;
-                    return onDrawableTouch(currentPosition, previousPosition);
+                    previousPosition = getCurrentPosition();
+                    setCurrentPosition(i);
+                    return onDrawableTouch(getCurrentPosition(), previousPosition);
                 }
             }
         }
         return false;
+    }
+
+    private int getCurrentPosition() {
+        return currentPosition;
+    }
+
+    public void setCurrentPosition(int currentPosition) {
+        this.currentPosition = currentPosition;
     }
 
     public void setStartIndex(int startIndex) {

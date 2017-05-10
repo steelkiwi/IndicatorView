@@ -1,5 +1,7 @@
 package steelkiwi.com.library.view;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -12,12 +14,11 @@ import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.OvershootInterpolator;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import steelkiwi.com.library.IndicatorType;
+import steelkiwi.com.library.utils.IndicatorType;
 import steelkiwi.com.library.R;
 import steelkiwi.com.library.drawable.DrawableDecorator;
 import steelkiwi.com.library.drawable.HangDownDrawable;
@@ -174,7 +175,7 @@ public class IndicatorView extends View implements IndicatorController {
                 getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
-        setOnTouchListener();
+//        setOnTouchListener(); turn off
     }
 
     private void setOnTouchListener() {
@@ -324,6 +325,7 @@ public class IndicatorView extends View implements IndicatorController {
 
     @Override
     public void onPageChanged(int position) {
+        drawableTouchListener.setCurrentPosition(position);
         if(getPreviousPosition() < position) {
             onSwipeRight(position);
         } else {
@@ -350,7 +352,7 @@ public class IndicatorView extends View implements IndicatorController {
         prepareStartPosition();
         // swipe left side
         startActionByType(position);
-        setIndicatorSelectColor(position , getIndicatorSelectColor());
+        setIndicatorSelectColor(position, getIndicatorSelectColor());
         // return back previous item
         if (position < allDrawables.size()) {
             returnActionByType(position + 1);
@@ -441,6 +443,8 @@ public class IndicatorView extends View implements IndicatorController {
         @Override
         public boolean onDrawableTouch(int currentPosition, int previousPosition) {
             viewPager.setCurrentItem(currentPosition);
+            rotate(currentPosition);
+            setIndicatorSelectColor(currentPosition, getIndicatorSelectColor());
             rotateBack(previousPosition);
             setIndicatorSelectColor(previousPosition, getIndicatorIdleColor());
             return true;
@@ -470,7 +474,7 @@ public class IndicatorView extends View implements IndicatorController {
     }
 
     private void setIndicatorSelectColor(int position, int color) {
-        allDrawables.get(position).setSelectColor(color);
+        getDrawable(position).setSelectColor(color);
     }
 
     private int getPreviousPosition() {
@@ -592,30 +596,30 @@ public class IndicatorView extends View implements IndicatorController {
         this.startPosition = startPosition;
     }
 
-    public int getVisibleItems() {
+    private int getVisibleItems() {
         return visibleItems;
     }
 
-    public void setVisibleItems(int visibleItems) {
+    private void setVisibleItems(int visibleItems) {
         this.visibleItems = visibleItems;
     }
 
-    public int getIndicatorCornerRadius() {
+    private int getIndicatorCornerRadius() {
         if(indicatorCornerRadius > maxIndicatorCornerRadius) {
             return maxIndicatorCornerRadius;
         }
         return indicatorCornerRadius;
     }
 
-    public void setIndicatorCornerRadius(int indicatorCornerRadius) {
+    private void setIndicatorCornerRadius(int indicatorCornerRadius) {
         this.indicatorCornerRadius = indicatorCornerRadius;
     }
 
-    public IndicatorType getActionType() {
+    private IndicatorType getActionType() {
         return type;
     }
 
-    public void setActionType(IndicatorType type) {
+    private void setActionType(IndicatorType type) {
         this.type = type;
     }
 }
