@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-//apply plugin: 'com.novoda.bintray-release'
+apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion 25
@@ -28,14 +28,14 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:25.1.1'
+}
 
-//    publish {
-//        artifactId = 'indicator-view'
-//        userOrg = rootProject.userOrg
-//        groupId = rootProject.groupId
-//        uploadName = rootProject.uploadName
-//        publishVersion = rootProject.publishVersion
-//        description = rootProject.description
-//        licences = rootProject.licences
-//    }
+publish {
+    artifactId = 'indicator-view'
+    userOrg = rootProject.userOrg
+    groupId = rootProject.groupId
+    uploadName = rootProject.uploadName
+    publishVersion = rootProject.publishVersion
+    description = rootProject.description
+    licences = rootProject.licences
 }

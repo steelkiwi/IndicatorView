@@ -6,7 +6,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.2'
-//        classpath 'com.novoda:bintray-release:0.4.0'
+        classpath 'com.novoda:bintray-release:0.4.0'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -22,11 +22,11 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-//ext {
-//    userOrg = 'soulyaroslav'
-//    groupId = 'com.steelkiwi'
-//    uploadName = 'indicator-view'
-//    description = 'View to indicate current page of the view pager'
-//    publishVersion = '1.0.0'
-//    licences = ['Apache-2.0']
-//}
+ext {
+    userOrg = 'soulyaroslav'
+    groupId = 'com.steelkiwi'
+    uploadName = 'indicator-view'
+    description = 'Indicator to highlight current viewpager position'
+    publishVersion = '1.0.0'
+    licences = ['Apache-2.0']
+}
