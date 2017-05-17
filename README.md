@@ -4,6 +4,11 @@
 
 IndicatorView to highlight current viewpager position
 
+## View
+
+[!(https://github.com/steelkiwi/IndicatorView/blob/master/assets/indicator_view_hung_down_action.png)]
+[!(https://github.com/steelkiwi/IndicatorView/blob/master/assets/indicator_view_look_up_action.png)]
+
 ## Description
 
 It's flexible and expandable component, no matter what amount of items you use it will always show items properly.
