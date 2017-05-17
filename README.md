@@ -6,8 +6,8 @@ IndicatorView to highlight current viewpager position
 
 ## View
 
-![](https://github.com/steelkiwi/IndicatorView/blob/master/assets/indicator_view_hung_down_action.gif =300x600)
-![](https://github.com/steelkiwi/IndicatorView/blob/master/assets/indicator_view_look_up_action.gif =300x600)
+<img src="https://github.com/steelkiwi/IndicatorView/blob/master/assets/indicator_view_hung_down_action.gif" width="300" height="600>
+<img src="https://github.com/steelkiwi/IndicatorView/blob/master/assets/indicator_view_look_up_action.gif" width="300" height="600>
 
 ## Description
 
