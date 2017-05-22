@@ -7,6 +7,7 @@ IndicatorView to highlight current viewpager position
 ## View
 
 ![](https://github.com/steelkiwi/IndicatorView/blob/master/assets/indicator_view_hung_down_action.gif)
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-IndicatorView-brightgreen.svg?style=flat)](https://android-arsenal.com/details/1/5781)
 
 ## Description
 
